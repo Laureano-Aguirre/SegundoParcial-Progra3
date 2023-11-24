@@ -1,0 +1,34 @@
+[
+    {
+        "id": 11,
+        "tipoCuenta": "CA",
+        "nroCuenta": "100001",
+        "moneda": "$",
+        "importe": "1000",
+        "fecha": "2023-10-22"
+    },
+    {
+        "id": 12,
+        "tipoCuenta": "CA",
+        "nroCuenta": "100001",
+        "moneda": "$",
+        "importe": "1000",
+        "fecha": "2023-10-22"
+    },
+    {
+        "id": 13,
+        "tipoCuenta": "CC",
+        "nroCuenta": "100001",
+        "moneda": "$",
+        "importe": "10000",
+        "fecha": "2023-10-23"
+    },
+    {
+        "id": 14,
+        "tipoCuenta": "Cc",
+        "nroCuenta": "100001",
+        "moneda": "$",
+        "importe": "1000",
+        "fecha": "2023-10-24"
+    }
+]
