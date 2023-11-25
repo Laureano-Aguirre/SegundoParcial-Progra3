@@ -1,20 +1,21 @@
 <?php
+include_once '../db/AccesoDatos.php';
 
-class Cuenta implements JsonSerializable
+class CuentaBanco
 {
-    private $id;
-    private $nombre;
-    private $apellido;
-    private $tipoDocumento;
-    private $nroDocumento;
-    private $email;
-    private $tipoCuenta;
-    private $moneda;
-    private $saldoInicial;
-    private $estado;
-    private $nombreImagen;
+    public $id;
+    public $nombre;
+    public $apellido;
+    public $tipoDocumento;
+    public $nroDocumento;
+    public $email;
+    public $tipoCuenta;
+    public $moneda;
+    public $saldoInicial;
+    public $estado;
+    public $nombreImagen;
 
-    public function __construct($id, $nombre, $apellido, $tipoDocumento, $nroDocumento, $email, $tipoCuenta, $moneda, $saldoInicial, $nombreImagen = null)
+    /* public function __construct($id, $nombre, $apellido, $tipoDocumento, $nroDocumento, $email, $tipoCuenta, $moneda, $saldoInicial, $nombreImagen = null)
     {
         $this->id = $id;
         $this->nombre = $nombre;
@@ -27,9 +28,9 @@ class Cuenta implements JsonSerializable
         $this->saldoInicial = $saldoInicial;
         $this->estado = 'ACTIVO';
         $this->nombreImagen = $nombreImagen;
-    }
+    } */
 
-    public function jsonSerialize()
+    /* public function jsonSerialize()
     {
         return get_object_vars($this);
     }
@@ -87,8 +88,63 @@ class Cuenta implements JsonSerializable
     public function getNombreImagen()
     {
         return $this->id;
+    } */
+
+    public function agregarCuenta(){
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+        $consulta = $objetoAccesoDato->retornarConsulta("INSERT into cuenta (id_cuenta,nombre,apellido,tipo_documento,nro_documento,email,tipo_cuenta,moneda,saldo_inicial,estado,nombre_imagen) values(:id, :nombre, :apellido, :tipoDocumento, :nroDocumento, :email, :tipoCuenta, :moneda, :saldoInicial, :estado, :nombreImagen)");
+        $consulta->bindValue(':id', $this->id, PDO::PARAM_INT);
+        $consulta->bindValue(':nombre', $this->nombre, PDO::PARAM_STR);
+        $consulta->bindValue(':apellido', $this->apellido, PDO::PARAM_STR);
+        $consulta->bindValue(':tipoDocumento', $this->tipoDocumento, PDO::PARAM_STR);
+        $consulta->bindValue(':nroDocumento', $this->nroDocumento, PDO::PARAM_INT);
+        $consulta->bindValue(':email', $this->email, PDO::PARAM_STR);
+        $consulta->bindValue(':tipoCuenta', $this->tipoCuenta, PDO::PARAM_STR);
+        $consulta->bindValue(':moneda', $this->moneda, PDO::PARAM_STR);
+        $consulta->bindValue(':saldoInicial', $this->saldoInicial, PDO::PARAM_INT);
+        $consulta->bindValue(':estado', $this->estado, PDO::PARAM_STR);
+        $consulta->bindValue(':nombreImagen', $this->nombreImagen, PDO::PARAM_STR);
+        $consulta->execute();
+        return $objetoAccesoDato->retornarUltimoId();
     }
 
+    public static function listarCuentas(){
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+        $consulta = $objetoAccesoDato->retornarConsulta("SELECT id_cuenta as idCuenta, nombre, apellido, tipo_documento as tipoDocumento, nro_documento as nroDocumento, email, tipo_cuenta as tipoCuenta, moneda, saldo_inicial as saldo, estado, nombre_imagen as nombreImagen FROM cuenta");
+        $consulta->execute();
+        return $consulta->fetchAll(PDO::FETCH_CLASS, "CuentaBanco");
+    }
+    
+    public function borrarCuenta(){
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+        $consulta = $objetoAccesoDato->retornarConsulta("UPDATE cuenta SET estado='inactivo' WHERE id_cuenta=:idCuenta");
+        $consulta->bindValue(':idCuenta', $this->id, PDO::PARAM_INT);
+        return $consulta->execute();
+    }
+
+    public function modificarCuenta(){
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+        $consulta = $objetoAccesoDato->retornarConsulta("UPDATE cuenta SET nombre=:nombre, apellido=:apellido, tipo_documento=:tipoDocumento, nro_documento=:nroDocumento, email=:email, tipo_cuenta=:tipoCuenta, moneda=:moneda WHERE id_cuenta=:idCuenta");
+        $consulta->bindValue(':idCuenta', $this->id, PDO::PARAM_INT);
+        $consulta->bindValue(':nombre', $this->nombre, PDO::PARAM_STR);
+        $consulta->bindValue(':apellido', $this->apellido, PDO::PARAM_STR);
+        $consulta->bindValue(':tipoDocumento', $this->tipoDocumento, PDO::PARAM_STR);
+        $consulta->bindValue(':nroDocumento', $this->nroDocumento, PDO::PARAM_INT);
+        $consulta->bindValue(':email', $this->email, PDO::PARAM_STR);
+        $consulta->bindValue(':tipoCuenta', $this->tipoCuenta, PDO::PARAM_STR);
+        $consulta->bindValue(':moneda', $this->moneda, PDO::PARAM_STR);
+        return $consulta->execute();
+    }
+
+    public function buscarCuentaPorNroYTipo(){
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+        $consulta = $objetoAccesoDato->retornarConsulta("SELECT id_cuenta as idCuenta, nombre, apellido, tipo_documento as tipoDocumento, nro_documento as nroDocumento, email, tipo_cuenta as tipoCuenta, moneda, saldo_inicial as saldo, estado, nombre_imagen as nombreImagen FROM cuenta WHERE id_cuenta=:idCuenta AND tipo_cuenta=:tipoCuenta");
+        $consulta->bindValue(':idCuenta', $this->id, PDO::PARAM_INT);
+        $consulta->bindValue(':tipoCuenta', $this->tipoCuenta, PDO::PARAM_STR);
+        $consulta->execute();
+        $cuentaBuscada = $consulta->fetchObject('CuentaBanco');
+        return $cuentaBuscada;
+    }
 
     public static function existeCuenta($cuentas, $nombreCuenta, $tipoCuenta)
     {
@@ -164,18 +220,6 @@ class Cuenta implements JsonSerializable
             echo '<br>Array vacio...';
         }
         return null;
-    }
-
-    public static function modificarCuenta($cuenta, $nombre, $apellido, $tipoDocumento, $nroDocumento, $email, $moneda)
-    {
-        $cuenta->nombre = $nombre;
-        $cuenta->apellido = $apellido;
-        $cuenta->tipoDocumento = $tipoDocumento;
-        $cuenta->nroDocumento = $nroDocumento;
-        $cuenta->email = $email;
-        $cuenta->moneda = $moneda;
-
-        return true;
     }
 
     public static function retiro($cuenta, $importe)

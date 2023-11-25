@@ -6,7 +6,7 @@ class AccesoDatos{
 
     private function __construct(){
         try { 
-            $this->objetoPDO = new PDO('mysql:host=localhost;dbname=restaurante_db;charset=utf8', 'root', '');
+            $this->objetoPDO = new PDO('mysql:host=localhost;dbname=banco_db;charset=utf8', 'root', '');
             $this->objetoPDO->exec("SET CHARACTER SET utf8");
             } 
         catch (PDOException $e) { 

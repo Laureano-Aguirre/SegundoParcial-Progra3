@@ -1,15 +1,18 @@
 <?php
 
-class Deposito implements JsonSerializable{
-    private $id;
-    private $tipoCuenta;
-    private $nroCuenta;
-    private $moneda;
-    private $importe;
-    private $fecha;
+include_once '../db/AccesoDatos.php';
 
 
-    public function jsonSerialize()
+class DepositoBanco{
+    public $id;
+    public $tipoCuenta;
+    public $nroCuenta;
+    public $moneda;
+    public $importe;
+    public $fecha;
+
+
+    /* public function jsonSerialize()
     {
         return get_object_vars($this);
     }
@@ -46,6 +49,26 @@ class Deposito implements JsonSerializable{
 
     public function getFecha() {
         return $this->fecha;
+    } */
+
+    public function agregarDeposito(){
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+        $consulta = $objetoAccesoDato->retornarConsulta("INSERT into deposito (id_deposito,tipo_cuenta,apellido,id_cuenta,moneda,importe,fecha_deposito) values(:idDeposito, :tipoCuenta, :nroCuenta, :moneda, :importe, :fecha)");
+        $consulta->bindValue(':idDeposito', $this->id, PDO::PARAM_INT);
+        $consulta->bindValue(':tipoCuenta', $this->tipoCuenta, PDO::PARAM_STR);
+        $consulta->bindValue(':nroCuenta', $this->nroCuenta, PDO::PARAM_INT);
+        $consulta->bindValue(':moneda', $this->moneda, PDO::PARAM_STR);
+        $consulta->bindValue(':importe', $this->importe, PDO::PARAM_INT);
+        $consulta->bindValue(':fecha', $this->fecha, PDO::PARAM_STR);
+        $consulta->execute();
+        return $objetoAccesoDato->retornarUltimoId();
+    }
+
+    public static function listarDepositos(){
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+        $consulta = $objetoAccesoDato->retornarConsulta("SELECT id_deposito as idDeposito, tipo_cuenta as tipoCuenta, id_cuenta as idCuenta, moneda, importe, fecha_deposito as fechaDeposito FROM deposito");
+        $consulta->execute();
+        return $consulta->fetchAll(PDO::FETCH_CLASS, "DepositoBanco");
     }
     
     public static function existeDeposito($depositos, $tipoCuenta, $moneda, $fecha = null){

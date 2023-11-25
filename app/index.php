@@ -11,7 +11,10 @@ use Slim\Routing\RouteCollectorProxy;
 use Slim\Routing\RouteContext;
 
 require __DIR__ . '/../vendor/autoload.php';
-//incluir middlewares a usar
+
+include_once '../middlewares/ValidationPOST.php';
+include_once '../middlewares/ValidationDELETE.php';
+include_once '../middlewares/ValidationPUT.php';
 
 // Instantiate App
 $app = AppFactory::create();
@@ -25,8 +28,10 @@ $app->addErrorMiddleware(true, true, true);
 // Add parse body
 $app->addBodyParsingMiddleware();
 
-//incluir controllers
-
+include_once '../controllers/ajusteController.php';
+include_once '../controllers/cuentaController.php';
+include_once '../controllers/depositoController.php';
+include_once '../controllers/retiroController.php';
 
 
 // Routes
@@ -42,7 +47,7 @@ $app->post('[/]', function (Request $request, Response $response) {
     switch ($action){
         case 'CuentaAlta':
             include_once("../operaciones/CuentaAlta.php");
-            $result = ['message' => 'Crear la cuent!'];
+            $result = ['message' => 'Crear la cuenta!'];
             $response->getBody()->write(json_encode($result));
             break;
         case 'ConsultarCuenta':
@@ -71,7 +76,7 @@ $app->post('[/]', function (Request $request, Response $response) {
             break;
     }
     return $response->withHeader('Content-Type', 'application/json');
-})->add(new AuthenticationMiddleware())->add(new LoggerMiddlewarePOST());
+})->add(new ValidationMiddlewarePOST());
 
 
 $app->put('[/]', function (Request $request, Response $response) {
@@ -79,14 +84,14 @@ $app->put('[/]', function (Request $request, Response $response) {
     $result = ['message' => 'Exito al modificar la cuenta!'];
     $response->getBody()->write(json_encode($result));
     return $response->withHeader('Content-Type', 'application/json');
-})->add(new AuthenticationMiddleware())->add(new LoggerMiddlewarePUT());
+})->add(new ValidationMiddlewarePUT());
 
 $app->delete('[/]', function (Request $request, Response $response) {    
     include_once('../operaciones/BorrarCuenta.php');
     $result = ['message' => 'Exito al borrar la cuenta!'];
     $response->getBody()->write(json_encode($result));
     return $response->withHeader('Content-Type', 'application/json');
-})->add(new AuthenticationMiddleware())->add(new LoggerMiddlewareDelete());
+})->add(new ValidationMiddlewareDELETE());
 
 /* $app->group('/auth', function (RouteCollectorProxy $group) {
     $group->post('[/login]', function (Request $request, Response $response) {
