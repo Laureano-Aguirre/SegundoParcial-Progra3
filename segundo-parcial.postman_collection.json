@@ -1,0 +1,597 @@
+{
+	"info": {
+		"_postman_id": "ba90ad54-05eb-4808-9822-28a73c691261",
+		"name": "segundo-parcial",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29393896"
+	},
+	"item": [
+		{
+			"name": "POST",
+			"item": [
+				{
+					"name": "CuentaAlta",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "action",
+									"value": "CuentaAlta",
+									"type": "text"
+								},
+								{
+									"key": "nombre",
+									"value": "German",
+									"type": "text"
+								},
+								{
+									"key": "apellido",
+									"value": "Cano",
+									"type": "text"
+								},
+								{
+									"key": "tipoDocumento",
+									"value": "dni",
+									"type": "text"
+								},
+								{
+									"key": "nroDocumento",
+									"value": "12345678",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "german@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "tipoCuenta",
+									"value": "CA",
+									"type": "text"
+								},
+								{
+									"key": "moneda",
+									"value": "$",
+									"type": "text"
+								},
+								{
+									"key": "saldoInicial",
+									"value": "50000",
+									"type": "text"
+								},
+								{
+									"key": "archivo",
+									"type": "file",
+									"src": "/C:/xampp/htdocs/SegundoParcial-Progra3/imagen.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:666/app/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ConsultarCuenta",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "action",
+									"value": "ConsultarCuenta",
+									"type": "text"
+								},
+								{
+									"key": "nombre",
+									"value": "Laureano",
+									"type": "text"
+								},
+								{
+									"key": "tipoCuenta",
+									"value": "CAU$S",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:666/app/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DepositoCuenta",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "action",
+									"value": "DepositoCuenta",
+									"type": "text"
+								},
+								{
+									"key": "tipoCuenta",
+									"value": "CA",
+									"type": "text"
+								},
+								{
+									"key": "nroCuenta",
+									"value": "100000",
+									"type": "text"
+								},
+								{
+									"key": "moneda",
+									"value": "U$S",
+									"type": "text"
+								},
+								{
+									"key": "importe",
+									"value": "10000",
+									"type": "text"
+								},
+								{
+									"key": "archivo",
+									"type": "file",
+									"src": "/C:/xampp/htdocs/SegundoParcial-Progra3/deposito.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:666/app/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RetirarCuenta",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "action",
+									"value": "RetiroCuenta",
+									"type": "text"
+								},
+								{
+									"key": "tipoCuenta",
+									"value": "CA",
+									"type": "text"
+								},
+								{
+									"key": "moneda",
+									"value": "U$S",
+									"type": "text"
+								},
+								{
+									"key": "nroCuenta",
+									"value": "100000",
+									"type": "text"
+								},
+								{
+									"key": "importe",
+									"value": "10000",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:666/app/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AjusteBanco",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "action",
+									"value": "AjusteCuenta",
+									"type": "text"
+								},
+								{
+									"key": "idMovimiento",
+									"value": "11",
+									"type": "text"
+								},
+								{
+									"key": "movimiento",
+									"value": "deposito",
+									"type": "text"
+								},
+								{
+									"key": "motivo",
+									"value": "error",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:666/app/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "DELETE",
+			"item": [
+				{
+					"name": "BorrarCuenta",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "action",
+									"value": "BorrarCuenta",
+									"type": "text"
+								},
+								{
+									"key": "idCuenta",
+									"value": "100004",
+									"type": "text"
+								},
+								{
+									"key": "tipoCuenta",
+									"value": "CA$",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:666/app/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "PUT",
+			"item": [
+				{
+					"name": "ModificarCuenta",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "action",
+									"value": "ModificarCuenta",
+									"type": "text"
+								},
+								{
+									"key": "idCuenta",
+									"value": "100000",
+									"type": "text"
+								},
+								{
+									"key": "nombre",
+									"value": "German",
+									"type": "text"
+								},
+								{
+									"key": "apellido",
+									"value": "Pezella",
+									"type": "text"
+								},
+								{
+									"key": "tipoDocumento",
+									"value": "dni",
+									"type": "text"
+								},
+								{
+									"key": "nroDocumento",
+									"value": "44555666",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "german@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "tipoCuenta",
+									"value": "CAU$S",
+									"type": "text"
+								},
+								{
+									"key": "moneda",
+									"value": "U$S",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:666/app/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GET",
+			"item": [
+				{
+					"name": "ConsultarMovimiento-A",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:666/app/?action=a&tipoCuenta=CAU$S&moneda=U$S&fecha=2023-11-27",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								""
+							],
+							"query": [
+								{
+									"key": "action",
+									"value": "a"
+								},
+								{
+									"key": "tipoCuenta",
+									"value": "CAU$S"
+								},
+								{
+									"key": "moneda",
+									"value": "U$S"
+								},
+								{
+									"key": "fecha",
+									"value": "2023-11-27"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ConsultarMovimiento-B",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:666/app/?action=b&nroCuenta=100000",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								""
+							],
+							"query": [
+								{
+									"key": "action",
+									"value": "b"
+								},
+								{
+									"key": "nroCuenta",
+									"value": "100000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ConsultarMovimiento-C",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:666/app/?action=c&fechaUno=2023-11-25&fechaDos=2023-11-28",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								""
+							],
+							"query": [
+								{
+									"key": "action",
+									"value": "c"
+								},
+								{
+									"key": "fechaUno",
+									"value": "2023-11-25"
+								},
+								{
+									"key": "fechaDos",
+									"value": "2023-11-28"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ConsultarMovimiento-D",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:666/app/?action=d&tipoCuenta=CAU$S",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								""
+							],
+							"query": [
+								{
+									"key": "action",
+									"value": "d"
+								},
+								{
+									"key": "tipoCuenta",
+									"value": "CAU$S"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ConsultarMovimiento-E",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:666/app/?action=e&moneda=U$S",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								""
+							],
+							"query": [
+								{
+									"key": "action",
+									"value": "e"
+								},
+								{
+									"key": "moneda",
+									"value": "U$S"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ConsultarMovimiento-F",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:666/app/?action=f&nroCuenta=100000",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								""
+							],
+							"query": [
+								{
+									"key": "action",
+									"value": "f"
+								},
+								{
+									"key": "nroCuenta",
+									"value": "100000"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

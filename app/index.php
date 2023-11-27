@@ -16,6 +16,10 @@ include_once '../middlewares/ValidationPOST.php';
 include_once '../middlewares/ValidationDELETE.php';
 include_once '../middlewares/ValidationPUT.php';
 include_once '../middlewares/ValidationGET.php';
+include_once '../middlewares/LoginMiddleware.php';
+include_once '../middlewares/Authentication.php';
+
+include_once '../jwt/AutentificadorJWT.php';
 
 // Instantiate App
 $app = AppFactory::create();
@@ -40,7 +44,7 @@ $app->get('[/]', function (Request $request, Response $response) {
     $result = ['message' => 'Consultando movimientos...'];
     $response->getBody()->write(json_encode($result));
     return $response->withHeader('Content-Type', 'application/json');
-})->add(new ValidationMiddlewareGET());
+})->add(new ValidationMiddlewareGET())->add(new LoginMiddleware());
 
 $app->post('[/]', function (Request $request, Response $response) {
     $action = $_POST['action'];
@@ -71,7 +75,7 @@ $app->post('[/]', function (Request $request, Response $response) {
             break;
     }
     return $response->withHeader('Content-Type', 'application/json');
-})->add(new ValidationMiddlewarePOST());
+})->add(new ValidationMiddlewarePOST())->add(new LoginMiddleware());
 
 
 $app->put('[/]', function (Request $request, Response $response) {
@@ -86,15 +90,16 @@ $app->delete('[/]', function (Request $request, Response $response) {
     return $response->withHeader('Content-Type', 'application/json');
 })->add(new ValidationMiddlewareDELETE());
 
-/* $app->group('/auth', function (RouteCollectorProxy $group) {
+$app->group('/auth', function (RouteCollectorProxy $group) {
     $group->post('[/login]', function (Request $request, Response $response) {
         $parametros = $request->getParsedBody();
-        $datos = array('usuario' => $parametros['usuario'], 'rol' => 'socio');
+        $datos = array('usuario' => $parametros['usuario'], 'password' => $parametros['password'],'rol' => $parametros['rol']);
         $token = AutentificadorJWT::CrearToken($datos);
         $payload = json_encode(array('jwt' => $token));
         $response->getBody()->write(json_encode($payload));
         return $response->withHeader('Content-Type', 'application/json');
     })->add(new LoginMiddleware());
-}); */
+});
+
 
 $app->run();
