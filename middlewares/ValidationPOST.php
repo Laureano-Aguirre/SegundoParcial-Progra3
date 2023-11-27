@@ -8,6 +8,7 @@ require_once '../validations/validaciones.php';
 include_once '../controllers/cuentaController.php';
 include_once '../controllers/depositoController.php';
 include_once '../controllers/ajusteController.php';
+include_once '../controllers/logTransaccionesController.php';
 
 
 class ValidationMiddlewarePOST{
@@ -34,6 +35,7 @@ class ValidationMiddlewarePOST{
                         $tipo = $archivo['type'];
                         $nombreImagen = $cuentaController->generarNombreImagen($parametros['tipoCuenta'], $ultimoId);
                         move_uploaded_file($archivo['tmp_name'], '../Imagenes/2023/' . $nombreImagen);
+                        
                         $response = $handler->handle($request);
                     }
                 } else {
@@ -74,6 +76,10 @@ class ValidationMiddlewarePOST{
                         $ultimoId = $depositoController->agregarDeposito($parametros['tipoCuenta'] . $parametros['moneda'], $parametros['nroCuenta'], $parametros['moneda'], $parametros['importe'], $fechaActual);
                         $nombreImagen = $depositoController->generarNombreImagen($parametros['tipoCuenta'], $parametros['nroCuenta'], $ultimoId);
                         move_uploaded_file($archivo['tmp_name'], '../ImagenesDeDepositos2023/' . $nombreImagen);
+                        $logTransaccionesController = new logTransaccionesController();
+                        $fechaHora = date('Y-m-d H:i:s');
+                        $retorno = $logTransaccionesController->agregarLogTransaccion($parametros['usuario'], $fechaHora, 'deposito');
+                        echo $retorno;
                         $response = $handler->handle($request);
                     }else{
                         $response = new Response();
@@ -91,12 +97,16 @@ class ValidationMiddlewarePOST{
                     $cuentaController = new cuentaController();
                     if(($cuentaController->retirar($parametros['nroCuenta'], $parametros['tipoCuenta'] . $parametros['moneda'], $parametros['importe'])) == -1){
                         $response = new Response();
-                        $result = ['message' => 'ERROR, no puede retirar esa cantidad ya que no posee un saldo suficienteee.'];
+                        $result = ['message' => 'ERROR, no puede retirar esa cantidad ya que no posee un saldo suficiente.'];
                         $response->getBody()->write(json_encode($result));
                     }else{
                         $retiroController = new retiroController();
                         $fechaActual = date("Y-m-d");
                         $result = $retiroController->agregarRetiro($parametros['tipoCuenta'] . $parametros['moneda'], $parametros['nroCuenta'], $parametros['moneda'], $parametros['importe'], $fechaActual);
+                        $logTransaccionesController = new logTransaccionesController();
+                        $fechaHora = date('Y-m-d H:i:s');
+                        $logTransaccionesController->agregarLogTransaccion($parametros['usuario'], $fechaHora, 'deposito');
+                        
                         $response = $handler->handle($request);
                     }
                 } else {
@@ -123,6 +133,9 @@ class ValidationMiddlewarePOST{
                             $cuentaController->actualizarSaldo($idCuenta, $tipoCuenta, $importe);
                             $ajusteController = new ajusteController();
                             $ajusteController->agregarAjuste($parametros['idMovimiento'], $parametros['movimiento'], $parametros['motivo']);
+                            $logTransaccionesController = new logTransaccionesController();
+                            $fechaHora = date('Y-m-d H:i:s');
+                            $logTransaccionesController->agregarLogTransaccion($parametros['usuario'], $fechaHora, 'deposito');
                             $response = $handler->handle($request);
                         }
                     }elseif($parametros['movimiento'] == 'deposito'){

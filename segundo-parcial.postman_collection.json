@@ -127,6 +127,16 @@
 				{
 					"name": "DepositoCuenta",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MDExMjQxNzUsImV4cCI6MTcwMTE4NDE3NSwiYXVkIjoiZDNkYWY3MjY1ZjUwMDZjYzg2OGJmODdiN2MxNzZmZGNkZGVjMjcxMyIsImRhdGEiOnsidXN1YXJpbyI6Im1hcmlhIiwicGFzc3dvcmQiOiJtYXJpYTEyMyIsInJvbCI6ImNhamVybyJ9LCJhcHAiOiJUZXN0IEpXVCJ9.fH4yV1PXLWU1SVv-7KOjarkN7UYgO2i6ZlnD_DKTmYQ\\",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -161,6 +171,16 @@
 									"key": "archivo",
 									"type": "file",
 									"src": "/C:/xampp/htdocs/SegundoParcial-Progra3/deposito.png"
+								},
+								{
+									"key": "usuario",
+									"value": "maria",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "maria123",
+									"type": "text"
 								}
 							]
 						},
@@ -588,6 +608,19 @@
 								}
 							]
 						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Agregados",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "GET",
+						"header": []
 					},
 					"response": []
 				}
