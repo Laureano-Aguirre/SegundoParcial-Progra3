@@ -3,12 +3,11 @@
 include_once '../class/ajuste.php';
 
 class ajusteController{
-    public function agregarAjuste($idAjuste, $idMovimiento, $motivo, $importe){
+    public function agregarAjuste($idMovimiento, $movimiento, $motivo){
         $ajuste = new AjusteBanco();
-        $ajuste->id = $idAjuste;
         $ajuste->idMovimiento = $idMovimiento;
+        $ajuste->movimiento = $movimiento;
         $ajuste->motivo = $motivo;
-        $ajuste->importe = $importe;
         return $ajuste->agregarAjuste();
     }
 

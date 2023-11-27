@@ -5,6 +5,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Psr7\Response;
 
 require_once '../validations/validaciones.php';
+include_once '../controllers/cuentaController.php';
 
 class ValidationMiddlewarePUT{
     public function __invoke(Request $request, RequestHandler $handler): Response
@@ -16,7 +17,15 @@ class ValidationMiddlewarePUT{
         switch ($action) {
             case 'ModificarCuenta':
                 if ((Validaciones::validarInt($parametros['idCuenta'])) && (Validaciones::validarNombre($parametros['nombre'])) && (Validaciones::validarNombre($parametros['apellido'])) && (Validaciones::validarNombre($parametros['tipoDocumento'])) && (Validaciones::validarDni($parametros['nroDocumento'])) && (Validaciones::validarCorreo($parametros['email'])) && (Validaciones::validarTipoCuenta($parametros['tipoCuenta'])) && (Validaciones::validarMoneda($parametros['moneda']))) {
-                    $response = $handler->handle($request);
+                    $cuentaController = new cuentaController();
+                    if(($cuentaController->buscarCuentaPorNroYTipo($parametros['idCuenta'], $parametros['tipoCuenta'])) == -1){
+                        $response = new Response();
+                        $result = ['message' => 'No existe ninguna cuenta con ese ID.'];
+                        $response->getBody()->write(json_encode($result));
+                    }else{
+                        $cuentaController->modificarCuenta($parametros['idCuenta'], $parametros['nombre'], $parametros['apellido'], $parametros['tipoDocumento'], $parametros['nroDocumento'], $parametros['email'], $parametros['tipoCuenta'], $parametros['moneda']);
+                        $response = $handler->handle($request);
+                    }
                 }else {
                     $response = new Response();
                     $result = ['message' => 'Algun parametro no fue introducido en un formato correcto.'];

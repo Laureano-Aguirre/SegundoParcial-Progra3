@@ -6,47 +6,16 @@ class AjusteBanco{
 
     public $id;
     public $idMovimiento;
+    public $movimiento;
     public $motivo;
-    public $importe;
-
-
-    /* public function __construct($id, $idMovimiento, $motivo, $importe)
-    {
-        $this->id = $id;
-        $this->idMovimiento = $idMovimiento;
-        $this->motivo = $motivo;
-        $this->importe = $importe;
-    }
-
-    public function jsonSerialize()
-    {
-        return get_object_vars($this);
-    }
-
-    public function getId() {
-        return $this->id;
-    }
-
-    public function getIdMovimiento() {
-        return $this->idMovimiento;
-    }
-
-    public function getMotivo() {
-        return $this->motivo;
-    }
-
-    public function getImporte() {
-        return $this->importe;
-    } */
 
     public function agregarAjuste(){
         $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
         $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
-        $consulta = $objetoAccesoDato->retornarConsulta("INSERT into ajuste (id_ajuste,id_movimiento,motivo,importe) values(:idAjuste, :idMovimiento, :motivo, :importe)");
-        $consulta->bindValue(':idAjuste', $this->id, PDO::PARAM_INT);
+        $consulta = $objetoAccesoDato->retornarConsulta("INSERT into ajuste (id_movimiento,movimiento,motivo) values(:idMovimiento, :movimiento, :motivo)");
         $consulta->bindValue(':idMovimiento', $this->idMovimiento, PDO::PARAM_INT);
+        $consulta->bindValue(':movimiento', $this->movimiento, PDO::PARAM_STR);
         $consulta->bindValue(':motivo', $this->motivo, PDO::PARAM_STR);
-        $consulta->bindValue(':importe', $this->importe, PDO::PARAM_INT);
         $consulta->execute();
         return $objetoAccesoDato->retornarUltimoId();
     }

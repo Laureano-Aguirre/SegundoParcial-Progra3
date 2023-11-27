@@ -15,85 +15,10 @@ class CuentaBanco
     public $estado;
     public $nombreImagen;
 
-    /* public function __construct($id, $nombre, $apellido, $tipoDocumento, $nroDocumento, $email, $tipoCuenta, $moneda, $saldoInicial, $nombreImagen = null)
-    {
-        $this->id = $id;
-        $this->nombre = $nombre;
-        $this->apellido = $apellido;
-        $this->tipoDocumento = $tipoDocumento;
-        $this->nroDocumento = $nroDocumento;
-        $this->email = $email;
-        $this->tipoCuenta = $tipoCuenta;
-        $this->moneda = $moneda;
-        $this->saldoInicial = $saldoInicial;
-        $this->estado = 'ACTIVO';
-        $this->nombreImagen = $nombreImagen;
-    } */
-
-    /* public function jsonSerialize()
-    {
-        return get_object_vars($this);
-    }
-
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function getNombre()
-    {
-        return $this->nombre;
-    }
-
-    public function getApellido()
-    {
-        return $this->apellido;
-    }
-
-    public function getTipoDocumento()
-    {
-        return $this->tipoDocumento;
-    }
-
-    public function getNroDocumento()
-    {
-        return $this->nroDocumento;
-    }
-
-    public function getEmail()
-    {
-        return $this->email;
-    }
-
-    public function getTipoCuenta()
-    {
-        return $this->tipoCuenta;
-    }
-
-    public function getMoneda()
-    {
-        return $this->moneda;
-    }
-
-    public function getSaldoInicial()
-    {
-        return $this->saldoInicial;
-    }
-
-    public function getEstado()
-    {
-        return $this->estado;
-    }
-
-    public function getNombreImagen()
-    {
-        return $this->id;
-    } */
-
+    
     public function agregarCuenta(){
         $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
-        $consulta = $objetoAccesoDato->retornarConsulta("INSERT into cuenta (id_cuenta,nombre,apellido,tipo_documento,nro_documento,email,tipo_cuenta,moneda,saldo_inicial,estado,nombre_imagen) values(:id, :nombre, :apellido, :tipoDocumento, :nroDocumento, :email, :tipoCuenta, :moneda, :saldoInicial, :estado, :nombreImagen)");
-        $consulta->bindValue(':id', $this->id, PDO::PARAM_INT);
+        $consulta = $objetoAccesoDato->retornarConsulta("INSERT into cuenta (nombre,apellido,tipo_documento,nro_documento,email,tipo_cuenta,moneda,saldo_inicial,estado,nombre_imagen) values(:nombre, :apellido, :tipoDocumento, :nroDocumento, :email, :tipoCuenta, :moneda, :saldoInicial, :estado, :nombreImagen)");
         $consulta->bindValue(':nombre', $this->nombre, PDO::PARAM_STR);
         $consulta->bindValue(':apellido', $this->apellido, PDO::PARAM_STR);
         $consulta->bindValue(':tipoDocumento', $this->tipoDocumento, PDO::PARAM_STR);
@@ -117,8 +42,9 @@ class CuentaBanco
     
     public function borrarCuenta(){
         $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
-        $consulta = $objetoAccesoDato->retornarConsulta("UPDATE cuenta SET estado='inactivo' WHERE id_cuenta=:idCuenta");
+        $consulta = $objetoAccesoDato->retornarConsulta("UPDATE cuenta SET estado='inactivo' WHERE id_cuenta=:idCuenta AND tipo_cuenta=:tipoCuenta");
         $consulta->bindValue(':idCuenta', $this->id, PDO::PARAM_INT);
+        $consulta->bindValue(':tipoCuenta', $this->tipoCuenta, PDO::PARAM_STR);
         return $consulta->execute();
     }
 
@@ -146,90 +72,56 @@ class CuentaBanco
         return $cuentaBuscada;
     }
 
-    public static function existeCuenta($cuentas, $nombreCuenta, $tipoCuenta)
-    {
-        if ($cuentas) {
-            foreach ($cuentas as $cuenta) {
-                if ($cuenta->nombre === $nombreCuenta && $cuenta->tipoCuenta === $tipoCuenta) {
-                    return 1;       //coincide ambas
-                } elseif ($cuenta->nombre === $nombreCuenta && $cuenta->tipoCuenta !== $tipoCuenta) {
-                    return 2;       //coincide solo el nombre
-                } elseif ($cuenta->tipoCuenta === $tipoCuenta && $cuenta->nombre !== $nombreCuenta) {
-                    return 3;       //coincide solo tipo de cuenta
-                }
-            }
-        } else {
-            echo "<br>Archivo vacio en existe cuenta...";
-        }
-        return 0;
+    public function buscarCuentaPorDniYTipo(){
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+        $consulta = $objetoAccesoDato->retornarConsulta("SELECT id_cuenta as idCuenta, nombre, apellido, tipo_documento as tipoDocumento, nro_documento as nroDocumento, email, tipo_cuenta as tipoCuenta, moneda, saldo_inicial as saldo, estado, nombre_imagen as nombreImagen FROM cuenta WHERE nro_documento=:nroDocumento AND tipo_cuenta=:tipoCuenta");
+        $consulta->bindValue(':nroDocumento', $this->nroDocumento, PDO::PARAM_INT);
+        $consulta->bindValue(':tipoCuenta', $this->tipoCuenta, PDO::PARAM_STR);
+        $consulta->execute();
+        $cuentaBuscada = $consulta->fetchObject('CuentaBanco');
+        return $cuentaBuscada;
     }
 
-    public static function actualizarSaldo($cuentas, $nombreCuenta, $tipoCuenta, $saldo)
-    {
-        if ($cuentas) {
-            foreach ($cuentas as $cuenta) {
-                if ($cuenta->nombre === $nombreCuenta && $cuenta->tipoCuenta === $tipoCuenta) {
-                    $cuenta->saldoInicial =  $cuenta->saldoInicial + $saldo;
-                    return $cuentas;
-                }
-            }
-        } else {
-            echo '<br>Array vacio...';
-            return false;
-        }
+    public function buscarCuentaPorNombreYTipo(){
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+        $consulta = $objetoAccesoDato->retornarConsulta("SELECT moneda, saldo_inicial as saldo FROM cuenta WHERE nombre=:nombre AND tipo_cuenta=:tipoCuenta");
+        $consulta->bindValue(':nombre', $this->nombre, PDO::PARAM_STR);
+        $consulta->bindValue(':tipoCuenta', $this->tipoCuenta, PDO::PARAM_STR);
+        $consulta->execute();
+        $cuentaBuscada = $consulta->fetch(PDO::FETCH_ASSOC);
+        return $cuentaBuscada;
     }
 
-    public static function actualizarCuentas($cuentas, $cuentaModificada, $idCuenta)
-    {
-        if ($cuentas) {
-            foreach ($cuentas as $key => $cuenta) {       //iteramos por indice numerico del array
-                if ($cuenta->id = $idCuenta) {
-                    $cuentas[$key] = $cuentaModificada; //reemplazamos en el indice que coinciden los id, un objeto por otro
-                    return $cuentas;
-                }
-            }
-        } else {
-            echo '<br>Array vacio en actualizar cuentas';
-        }
-        return $cuentas;
+    public function actualizarSaldo(){
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+        $consulta = $objetoAccesoDato->retornarConsulta("UPDATE cuenta SET saldo_inicial= saldo_inicial + :monto WHERE id_cuenta=:idCuenta AND tipo_cuenta=:tipoCuenta");
+        $consulta->bindValue(':monto', $this->saldoInicial, PDO::PARAM_INT);
+        $consulta->bindValue(':idCuenta', $this->id, PDO::PARAM_INT);
+        $consulta->bindValue(':tipoCuenta', $this->tipoCuenta, PDO::PARAM_STR);
+        return $consulta->execute();
     }
 
-    public static function retornarCuenta($cuentas, $nombreCuenta, $tipoCuenta)
-    {
-        if ($cuentas) {
-            foreach ($cuentas as $cuenta) {
-                if ($cuenta->nombre === $nombreCuenta && $cuenta->tipoCuenta === $tipoCuenta) {
-                    return $cuenta;
-                }
-            }
-        } else {
-            echo '<br>Array vacio...';
+    public function retirar(){
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+        $consulta = $objetoAccesoDato->retornarConsulta("SELECT saldo_inicial FROM cuenta WHERE id_cuenta=:idCuenta AND tipo_cuenta=:tipoCuenta");
+        $consulta->bindValue(':idCuenta', $this->id, PDO::PARAM_INT);
+        $consulta->bindValue(':tipoCuenta', $this->tipoCuenta, PDO::PARAM_STR);
+        $consulta->execute();
+        $saldoActual = $consulta->fetchColumn();
+        //var_dump($saldoActual);
+        //var_dump($this->saldoInicial);
+        if($saldoActual >= $this->saldoInicial){
+            $consulta = $objetoAccesoDato->retornarConsulta("UPDATE cuenta SET saldo_inicial= saldo_inicial - :monto WHERE id_cuenta=:idCuenta AND tipo_cuenta=:tipoCuenta");
+            $consulta->bindValue(':monto', $this->saldoInicial, PDO::PARAM_INT);
+            $consulta->bindValue(':idCuenta', $this->id, PDO::PARAM_INT);
+            $consulta->bindValue(':tipoCuenta', $this->tipoCuenta, PDO::PARAM_STR);
+            $consulta->execute();
+            return 1;
         }
-        return null;
+            return -1;
     }
 
-    public static function buscarCuentaPorNro($cuentas, $numeroCuenta, $tipoCuenta = null)
-    {
-        if ($cuentas) {
-            foreach ($cuentas as $cuenta) {
-                if (($numeroCuenta == $cuenta->id && $tipoCuenta == $cuenta->tipoCuenta) || $numeroCuenta == $cuenta->id) {
-                    return $cuenta;
-                }
-            }
-        } else {
-            echo '<br>Array vacio...';
-        }
-        return null;
-    }
-
-    public static function retiro($cuenta, $importe)
-    {
-        $resultado = $cuenta->saldoInicial = $cuenta->saldoInicial - $importe;
-        if ($resultado >= 0) {
-            return $cuenta;
-        }
-        return null;
-    }
+     
 
     public static function ajustarSaldoDeposito($cuenta, $deposito, $ajuste)
     {
